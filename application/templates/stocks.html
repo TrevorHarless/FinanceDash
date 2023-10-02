@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1 class="white-text">Stocks</h1>
+    
+    <!-- Search Form -->
+    <form method="post" action="/stocks" class="mb-4">
+        <div class="form-group">
+            <label for="stock_symbol">Enter Stock Symbol:</label>
+            <input type="text" class="form-control" id="stock_symbol" name="stock_symbol" placeholder="e.g., AAPL">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    
+    <!-- Display Default Stocks -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Price</th>
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in default_stocks %}
+                <tr>
+                    <td>{{ stock.info.symbol }}</td>
+                    <td>{{ stock.info.longName }}</td>
+                    <td>{{ stock.history(period='1d').Close[0] }}</td>
+                    <!-- Add more columns as needed -->
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Display Searched Stock -->
+    {% if searched_stock %}
+    <h2 class="white-text">Searched Stock</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Price</th>
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ searched_stock.info.symbol }}</td>
+                <td>{{ searched_stock.info.longName }}</td>
+                <td>{{ searched_stock.history(period='1d').Close[0] }}</td>
+                <!-- Add more columns as needed -->
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+    
+    <!-- Display Error Message -->
+    {% if error_message %}
+    <div class="alert alert-danger">
+        {{ error_message }}
+    </div>
+    {% endif %}
+{% endblock %}

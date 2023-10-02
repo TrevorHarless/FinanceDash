@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="registration-container">
+        <div class="white-text">
+            <h1 style="font-size: 24px;">Registration</h1>
+        </div>
+        <div class="form-container">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label for="email" class="form-control-label white-label">Email</label>
+                    {{ form.email(class="form-control", autocomplete="off") }}
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-control-label white-label">Password</label>
+                    {{ form.password(class="form-control", autocomplete="off", type="password") }}
+                </div>
+                <div class="form-group">
+                    <label for="password_confirm" class="form-control-label white-label">Confirm Password</label>
+                    {{ form.password_confirm(class="form-control", autocomplete="off", type="password") }}
+                </div>
+                <div class="form-group">
+                    <label for="first_name" class="form-control-label white-label">First Name</label>
+                    {{ form.first_name(class="form-control", autocomplete="off") }}
+                </div>
+                <div class="form-group">
+                    <label for="last_name" class="form-control-label white-label">Last Name</label>
+                    {{ form.last_name(class="form-control", autocomplete="off") }}
+                </div>
+                <button type="submit" class="btn btn-success">Register</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

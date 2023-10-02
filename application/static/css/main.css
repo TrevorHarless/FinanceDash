@@ -1,0 +1,49 @@
+body {
+    background-color: #343a40; 
+}
+.white-text {
+    color: white;
+}
+
+.centered-text-left {
+    display: flex;
+    align-items: center;
+}
+
+.image-container {
+    margin-left: auto;
+    margin-top: 5vh;
+}
+
+.small-image {
+    width: 450px; 
+    height: auto; 
+}
+
+.registration-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; 
+    padding: 20px; 
+}
+
+.white-label {
+    color: white;
+}
+
+.form-control {
+    width: 480px;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;
+    height: 80vh; 
+    padding: 20px; 
+}
+
+
