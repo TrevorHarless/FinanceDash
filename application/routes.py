@@ -1,4 +1,4 @@
-from application import app
+from application import app, cache
 from flask import flash, redirect, render_template, request, json, Response, session, url_for
 from application.forms import LoginForm, RegisterForm
 import pymysql
@@ -9,7 +9,7 @@ connection = pymysql.Connection(host='localhost', port=3306, database='financeUs
 
 cursor = connection.cursor()
 
-default_stocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "FB", "NFLX", "NVDA", "INTC", "AMD"]
+default_stocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NFLX", "NVDA", "INTC", "AMD"]
 
 @app.route("/")
 @app.route("/index")
@@ -69,26 +69,52 @@ def dashboard():
 def budget():
     return render_template("budget.html")
 
+
 @app.route("/stocks", methods=["GET", "POST"])
 def stocks():
+    searched_stock = False
     if request.method == "POST":
-        # Handle search request
         stock_symbol = request.form.get("stock_symbol")
+        searched_stock = True
         if stock_symbol:
-            # Fetch data for the searched stock
-            stock_data = yf.Ticker(stock_symbol)
-            if stock_data:
-                return render_template("stocks.html", default_stocks=default_stocks, searched_stock=stock_data)
+            # Fetch data for the searched stock symbol
+            data = get_stock_data(stock_symbol)
+            if data:
+                stock_data = [data]
             else:
-                # Handle invalid stock symbol
-                error_message = "Invalid stock symbol"
-                return render_template("stocks.html", default_stocks=default_stocks, error_message=error_message)
+                flash("Invalid stock symbol", "danger")
+                stock_data = []
+        else:
+            stock_data = get_default_stock_data()
     else:
-        # Display default list of stocks
-        default_stock_data = [yf.Ticker(symbol) for symbol in default_stocks]
-        return render_template("stocks.html", default_stocks=default_stock_data)
-    
-    #return render_template("stocks.html", stock_data=stock_data)
+        # Display default stocks by default
+        stock_data = get_default_stock_data()
+
+    return render_template("stocks.html", stock_data=stock_data, searched_stock=searched_stock)
+
+# Helper function to fetch data for default stocks
+def get_default_stock_data():
+    stock_data = []
+
+    for symbol in default_stocks:
+        data = get_stock_data(symbol)
+        if data:
+            stock_data.append(data)
+
+    return stock_data
+
+# Helper function for fetching stock data by symbol
+def get_stock_data(symbol):
+    stock = yf.Ticker(symbol)
+    price_data = stock.history(period='1d')
+
+    if not price_data.empty:
+        formatted_price = round(price_data.Close[0], 2)
+        stock_name = stock.info.get("longName", "")
+        return {"symbol": symbol, "name": stock_name, "price": formatted_price}
+    else:
+        return None
+
 
 
 # @app.route("/enrollment", methods=["GET","POST"])

@@ -1,9 +1,31 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1 class="white-text">Stocks</h1>
+    <!-- <h1 class="white-text">Stocks</h1> -->
+
+    <!-- Include Your External CSS File -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stocks.css') }}">
     
-    <!-- Search Form -->
+
+    <div class="scroller" data-speed="slow"> 
+        <ul class="tag-list scroller__inner">
+            <div class="card-container">
+                <div class="card-deck">
+                    {% for stock in stock_data %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ stock.symbol }}</h5>
+                            <p class="card-text">{{ stock.name }}</p>
+                            <p class="card-text">{{ stock.price }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </ul>
+    </div>
+
+
     <form method="post" action="/stocks" class="mb-4">
         <div class="form-group">
             <label for="stock_symbol">Enter Stock Symbol:</label>
@@ -11,56 +33,63 @@
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
-    
-    <!-- Display Default Stocks -->
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Price</th>
-                <!-- Add more columns as needed -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for stock in default_stocks %}
-                <tr>
-                    <td>{{ stock.info.symbol }}</td>
-                    <td>{{ stock.info.longName }}</td>
-                    <td>{{ stock.history(period='1d').Close[0] }}</td>
-                    <!-- Add more columns as needed -->
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
-    <!-- Display Searched Stock -->
+
     {% if searched_stock %}
-    <h2 class="white-text">Searched Stock</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Price</th>
-                <!-- Add more columns as needed -->
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ searched_stock.info.symbol }}</td>
-                <td>{{ searched_stock.info.longName }}</td>
-                <td>{{ searched_stock.history(period='1d').Close[0] }}</td>
-                <!-- Add more columns as needed -->
-            </tr>
-        </tbody>
-    </table>
+        <div class="card-container">
+            <div class="card-deck">
+                {% for stock in stock_data %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ stock.symbol }}</h5>
+                        <p class="card-text">{{ stock.name }}</p>
+                        <p class="card-text">{{ stock.price }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div> 
     {% endif %}
+
     
-    <!-- Display Error Message -->
-    {% if error_message %}
-    <div class="alert alert-danger">
-        {{ error_message }}
-    </div>
-    {% endif %}
+    <!-- Display Stock Cards -->
+    <!-- <div class="scroller" data-speed="slow"> 
+        <ul class="tag-list scroller__inner">
+            <div class="card-container">
+                <div class="card-deck">
+                    {% for stock in stock_data %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ stock.symbol }}</h5>
+                            <p class="card-text">{{ stock.name }}</p>
+                            <p class="card-text">{{ stock.price }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </ul>
+    </div> -->
+    
+    <!-- Display Stock Cards -->
+    <!-- <div class="scroller"> 
+        <div class="card-container">
+            <div class="card-deck">
+                {% for stock in stock_data %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ stock.symbol }}</h5>
+                        <p class="card-text">{{ stock.name }}</p>
+                        <p class="card-text">{{ stock.price }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div> -->
+
+    <p class="text-white">Stock prices are updated every 3 minutes.</p>
+
+    <!-- Include Your JavaScript File -->
+    <script src="{{ url_for('static', filename='js/stocks.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/stocks.js') }}"></script> -->
 {% endblock %}
